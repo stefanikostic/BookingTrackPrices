@@ -10,8 +10,6 @@ function setupListeners() {
 
 function setupClickListener(propertyCards, i) {
   propertyCards[i].addEventListener("click", function (event) {
-    event.preventDefault();
-
     const clickedPropertyCard = event.target;
 
     console.log('clickedPropertyCard', clickedPropertyCard);
@@ -48,9 +46,7 @@ function setupClickListener(propertyCards, i) {
           selectedAccommodations: selectedAccommodations,
         });
       });
-    } else {
-      event.stopPropagation();
-    }
+    } 
   });
 }
 
@@ -63,9 +59,6 @@ function setupMouseOverListener(propertyCards, i) {
 
     if (propertyCardDataTestIdAttribute === "property-card") {
       mouseOverElement.style.outline = "3px solid #17A2B8";
-    } else {
-      event.stopPropagation();
-      event.preventDefault();
     }
   });
 }
@@ -79,9 +72,6 @@ function setupMouseOutListener(propertyCards, i) {
 
     if (propertyCardDataTestIdAttribute === "property-card") {
       mouseOutElement.style.outline = "";
-    } else {
-      event.stopPropagation();
-      event.preventDefault();
     }
   });
 }

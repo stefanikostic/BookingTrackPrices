@@ -5,6 +5,7 @@ document.getElementById("pick-element-btn").addEventListener("click", () => {
       files: ["content.js"],
     });
   });
+  window.close();
 });
 
 const SELECTED_ACCOMMODATIONS_KEY = "selectedAccommodations";
