@@ -2,55 +2,64 @@ function setupListeners() {
   let propertyCards = document.querySelectorAll('[data-testid="property-card"]');
 
   for (let i = 0; i < propertyCards.length; i++) {
-    propertyCards[i].addEventListener("click", function(event) {
-      event.preventDefault();
-      const clickedPropertyCard = event.target;
+    setupClickListener(propertyCards, i);
+    setupMouseOverListener(propertyCards, i);
+    setupMouseOutListener(propertyCards, i);
+  }
+}
 
-      let propertyCardDataTestIdAttribute = clickedPropertyCard.getAttribute("data-testid");
-      if (propertyCardDataTestIdAttribute === "property-card") {
-        
-        clickedPropertyCard.style.outline = "";
+function setupClickListener(propertyCards, i) {
+  propertyCards[i].addEventListener("click", function (event) {
+    event.preventDefault();
 
-        let accommodationDetails = extractPrice(clickedPropertyCard);
+    const clickedPropertyCard = event.target;
 
-        chrome.storage.local.get(["selectedAccommodations"], (result) => {
-          let selectedAccommodations = result["selectedAccommodations"];
-          
-          if (!Array.isArray(selectedAccommodations)) {
-            selectedAccommodations = [accommodationDetails];
-          } else {
-            let duplicateAccommodation = selectedAccommodations
-            .find(selectedAccommodation => selectedAccommodation.bookingPropertyName === accommodationDetails.bookingPropertyName &&
+    console.log('clickedPropertyCard', clickedPropertyCard);
+    let propertyCardDataTestIdAttribute = clickedPropertyCard.getAttribute("data-testid");
+    if (propertyCardDataTestIdAttribute === "property-card") {
+      clickedPropertyCard.style.outline = "";
+
+      let accommodationDetails = extractAccommodationDetails(clickedPropertyCard);
+
+      console.log("local storage", chrome.storage.local);
+      chrome.storage.local.get(["selectedAccommodations"], (result) => {
+        let selectedAccommodations = result["selectedAccommodations"];
+
+        if (!Array.isArray(selectedAccommodations)) {
+          selectedAccommodations = [accommodationDetails];
+        } else {
+          let duplicateAccommodation = selectedAccommodations.find(
+            (selectedAccommodation) =>
+              selectedAccommodation.bookingPropertyName === accommodationDetails.bookingPropertyName &&
               selectedAccommodation.roomType === accommodationDetails.roomType &&
               selectedAccommodation.startDate === accommodationDetails.startDate &&
               selectedAccommodation.endDate === accommodationDetails.endDate &&
               selectedAccommodation.numberOfRooms === accommodationDetails.numberOfRooms &&
               selectedAccommodation.numberOfAdults === accommodationDetails.numberOfAdults &&
-              selectedAccommodation.numberOfChildren === accommodationDetails.numberOfChildren);
+              selectedAccommodation.numberOfChildren === accommodationDetails.numberOfChildren
+          );
 
-            if (!duplicateAccommodation) {
-              selectedAccommodations.push(accommodationDetails);
-            }
+          if (!duplicateAccommodation) {
+            selectedAccommodations.push(accommodationDetails);
           }
-      
-          chrome.storage.local.set({ selectedAccommodations: selectedAccommodations });
+        }
+
+        chrome.storage.local.set({
+          selectedAccommodations: selectedAccommodations,
         });
-
-      } else {
-        event.stopPropagation();
-      }
-    });
-
-    setupMouseOverListener(propertyCards, i);
-    setupMouseOutListener(propertyCards, i);
-  }
+      });
+    } else {
+      event.stopPropagation();
+    }
+  });
 }
 
 function setupMouseOverListener(propertyCards, i) {
   propertyCards[i].addEventListener("mouseover", function (event) {
     const mouseOverElement = event.target;
 
-    let propertyCardDataTestIdAttribute = mouseOverElement.getAttribute("data-testid");
+    let propertyCardDataTestIdAttribute =
+      mouseOverElement.getAttribute("data-testid");
 
     if (propertyCardDataTestIdAttribute === "property-card") {
       mouseOverElement.style.outline = "3px solid #17A2B8";
@@ -65,7 +74,8 @@ function setupMouseOutListener(propertyCards, i) {
   propertyCards[i].addEventListener("mouseout", function (event) {
     const mouseOutElement = event.target;
 
-    let propertyCardDataTestIdAttribute = mouseOutElement.getAttribute("data-testid");
+    let propertyCardDataTestIdAttribute =
+      mouseOutElement.getAttribute("data-testid");
 
     if (propertyCardDataTestIdAttribute === "property-card") {
       mouseOutElement.style.outline = "";
@@ -76,7 +86,7 @@ function setupMouseOutListener(propertyCards, i) {
   });
 }
 
-function extractPrice(element) {
+function extractAccommodationDetails(element) {
   let titleElement = element.querySelector('[data-testid="title"]');
   let bookingPropertyName = titleElement && titleElement.innerText;
 
@@ -96,7 +106,7 @@ function extractPrice(element) {
   let numberOfRooms = searchParams.get("no_rooms");
   let numberOfAdults = searchParams.get("group_adults");
   let numberOfChildren = searchParams.get("group_children");
-  
+
   return {
     bookingPropertyName: bookingPropertyName,
     roomType: roomType,
@@ -106,7 +116,7 @@ function extractPrice(element) {
     numberOfAdults: numberOfAdults,
     numberOfChildren: numberOfChildren,
     numberOfRooms: numberOfRooms,
-    imgSource: imgSource
+    imgSource: imgSource,
   };
 }
 

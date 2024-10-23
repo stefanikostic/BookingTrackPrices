@@ -32,7 +32,7 @@
   }
 
   .room-type, .dates {
-      font-size: 0.9rem;
+      font-size: 0.7rem;
       color: #666;
       margin-bottom: 6px;
   }
@@ -42,7 +42,7 @@
   }
 
   .arrow-down {
-    color: green;
+    color: rgba(72, 174, 72);
   }
 
   .updated-price {
@@ -80,17 +80,31 @@
 
   #pick-element-btn {
     font-size: 12px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border: none;
   }
 
-  /* Spinner CSS */
+  #pick-element-btn:hover {
+    background-color: transparent !important;
+  }
+
+  #pick-element-btn:focus, 
+  #pick-element-btn:active {
+    outline: none;       
+    border: none;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.436);        
+  }
+
   #spinner {
     border: 4px solid rgba(0, 0, 0, 0.1);
     border-radius: 50%;
     border-top: 4px solid #2d383f;
-    width: 100px;
-    height: 100px;
+    width: 30px;
+    height: 30px;
     animation: spin 1s linear infinite;
+  }
+
+  #saved-bookings-span {
+    font-size: 16px;
   }
 
   @keyframes spin {
@@ -105,4 +119,8 @@
 
   .not-available-property {
     font-size: 12px;
+  }
+
+  #add-booking-text {
+    font-size: 14px;
   }
